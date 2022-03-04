@@ -4,7 +4,7 @@
 
 ### 다수의 state에 접근하는 방법
 
-1. 3개의 state
+1. 다수의 state설정
 
 ```
     const [enteredTitle, setEnteredTitle] = useState('');
@@ -15,7 +15,7 @@
     }
 ```
 
-2. 1개의 state
+2. 1개의 state설정
 
 - 1개의 state가지도록 useState에 객체 넣는 방법
 - 하나의 state에 접근하면서 다른 데이터 사라지지않도록
@@ -50,4 +50,5 @@
 ```
 
 - 동시에 많은 업데이트 계획하는 경우 잘못된 snapshow에 의존하게 될 수 있다
-- setUserInput안에 함수넣는 경우는 userState 함수가 제공하는 상태 snapshot이 가장 최신상태 snapshot`임을 부장
+- setUserInput안에 함수넣는 경우는 userState 함수가 제공하는 상태 snapshot이 가장 최신상태 snapshot임을 보장
+  -> 이전상태에 기반한다면
