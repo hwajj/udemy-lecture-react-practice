@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
-import NewExpense from './components/NewExpense/NewExpense';
-import Expenses from './components/Expenses/Expenses';
+import ExpenseItem from './components/ExpenseItem';
 
 const DUMMY_EXPENSES = [
   {
@@ -26,17 +25,6 @@ const DUMMY_EXPENSES = [
 ];
 
 const App = () => {
-  const [expenses, setExpenses] = useState(DUMMY_EXPENSES);
-
-  const addExpenseHandler = (expense) => {
-    console.log('In App.js');
-    //받은 expense를 배열의 첫번째 요소로 하고
-    //상태관리하는 expenses를 스프레드로 뿌려줌
-    setExpenses((prevExpenses) => {
-      return [expense, ...expenses];
-    });
-  };
-
   // return React.createElement(
   //   'div',
   //   {},
@@ -46,8 +34,7 @@ const App = () => {
 
   return (
     <div>
-      <NewExpense onAddExpense={addExpenseHandler} />
-      <Expenses items={expenses} />
+      <ExpenseItem />
     </div>
   );
 };
