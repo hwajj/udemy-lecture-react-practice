@@ -9,19 +9,55 @@ const defaultCartState = {
 
 const cartReducer = (state, action) => {
   if (action.type === 'ADD') {
-    const updatedItems = state.items.concat(action.item);
     const updatedTotalAmount =
       state.totalAmount + action.item.price * action.item.amount;
+
+    const existingCartItemIndex = state.items.findIndex(
+      (item) => item.id === action.item.id
+    );
+    const existingCartItem = state.items[existingCartItemIndex];
+    let updatedItems;
+
+    if (existingCartItem) {
+      const updatedItem = {
+        ...existingCartItem,
+        amount: existingCartItem.amount + action.item.amount,
+      };
+      updatedItems = [...state.items];
+      updatedItems[existingCartItemIndex] = updatedItem;
+    } else {
+      updatedItems = state.items.concat(action.item);
+    }
     return {
       items: updatedItems,
       totalAmount: updatedTotalAmount,
     };
   }
+  if (action.type === 'REMOVE') {
+    const existingCartItemIndex = state.items.findIndex(
+      (item) => item.id === action.id
+    );
+    const existingItem = state.items[existingCartItemIndex];
+    const updatedTotalAmount = state.totalAmount - existingItem.price;
+    let updatedItems;
+    if (existingItem.amount === 1) {
+      //남은수량 1인 item을 remove하려면 해당 아이디 아이템을 삭제해야함
+      updatedItems = state.items.filter((item) => item.id !== action.id);
+    } else {
+      const updatedItem = { ...existingItem, amount: existingItem.amount - 1 };
+      updatedItems = [...state.items];
+      updatedItems[existingCartItemIndex] = updatedItem;
+    }
+
+    return {
+      items: updatedItems,
+      totalAmount: updatedTotalAmount,
+    };
+  }
+
   return defaultCartState;
 };
 
-// cart-context 데이터 관리 ,
-// 컨텍스트를 접근하려는 모든 컴포넌트에 제공
 const CartProvider = (props) => {
   const [cartState, dispatchCartAction] = useReducer(
     cartReducer,
