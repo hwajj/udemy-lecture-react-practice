@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
-const useHttp = (requestConfig, applyDataFn) => {
+const useHttp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const sendRequest = async (taskText) => {
+  const sendRequest = useCallback(async (requestConfig, applyDataFn) => {
     setIsLoading(true);
     setError(null);
     try {
@@ -20,19 +20,11 @@ const useHttp = (requestConfig, applyDataFn) => {
 
       const data = await response.json();
       applyDataFn(data);
-      //공통함수 일반화하도록 함수로 인자 받게 함
-      //   const loadedTasks = [];
-
-      //   for (const taskKey in data) {
-      //     loadedTasks.push({ id: taskKey, text: data[taskKey].text });
-      //   }
-
-      //   setTasks(loadedTasks);
     } catch (err) {
       setError(err.message || 'Something went wrong!');
     }
     setIsLoading(false);
-  };
+  }, []);
 
   return {
     isLoading,
