@@ -7,14 +7,28 @@ import classes from './AvailableMeals.module.css';
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [httpError, setHttpError] = useState();
+
+  // const errorHandling = async (fetchFn) => {
+  //   try {
+  //     await fetchFn();
+  //   } catch (error) {
+  //     setIsLoading(false);
+  //     setHttpError(error.message);
+  //   }
+  // };
 
   useEffect(() => {
     const fetchMeals = async () => {
       const response = await fetch(
-        'https://react-http-9393c-default-rtdb.asia-southeast1.firebasedatabase.app/meals.json'
+        'https://react-http-9393c-default-rtdb.asia-southeast1.firebasedatabase.app/meals'
       );
       const responseData = await response.json();
-      console.log(response);
+
+      if (!response.ok) {
+        console.log('error');
+        throw new Error('Server Error ');
+      }
 
       const loadedMeals = [];
       for (const key in responseData) {
@@ -28,13 +42,27 @@ const AvailableMeals = () => {
       setMeals(loadedMeals);
       setIsLoading(false);
     };
-    fetchMeals();
-  }, []); //의존성 없음 , 컴포넌트 최초 실행시에만 실행
+
+    // errorHandling(fetchMeals);
+
+    fetchMeals().catch((error) => {
+      setIsLoading(false);
+      setHttpError(error.message);
+    });
+  }, []);
 
   if (isLoading) {
     return (
       <section className={classes.MealsLoading}>
         <p> Loading...</p>
+      </section>
+    );
+  }
+
+  if (httpError) {
+    return (
+      <section className={classes.MealsError}>
+        <p>{httpError}</p>
       </section>
     );
   }
